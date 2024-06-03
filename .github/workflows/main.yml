@@ -1,11 +1,11 @@
-on: 
+on:
   push:
     branches:
       - main
 
 jobs:
   run_pull:
-    name: run pull
+    name: Run pull
     runs-on: ubuntu-latest
 
     steps:
@@ -16,9 +16,12 @@ jobs:
         chmod 600 ~/.ssh/DevTanam123
         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+    - name: Debug SSH connection
+      run: |
+        ssh -i ~/.ssh/DevTanam123 ${USERNAME}@${HOST} "echo Connected successfully!"
 
     - name: Connect and pull
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull"
+        ssh -i ~/.ssh/DevTanam123 ${USERNAME}@${HOST} "cd ${WORK_DIR} && git checkout ${MAIN_BRANCH} && git pull"
     - name: cleanup
       run: rm -rf ~/.ssh
